@@ -19,8 +19,16 @@ function App() {
 
   function addToCart(item){
     const itemExist=cart.findIndex(guitar => guitar.id===item.id );
-      console.log(itemExist);
+    if(itemExist>=0){
+      console.log("Ya existe");
+      const updCart=[...cart];
+      updCart[itemExist].quantyty++;
+      setCart(updCart);
+    }else{
+      item.quantyty=1;
       setCart((prevState)=>[...prevState,item]);
+      console.log("No existe agregando");
+    }
 
   }
 
