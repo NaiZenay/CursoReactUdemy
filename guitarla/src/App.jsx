@@ -17,24 +17,63 @@ function App() {
 
   // }, [])
 
-  function addToCart(item){
-    const itemExist=cart.findIndex(guitar => guitar.id===item.id );
-    if(itemExist>=0){
+  function addToCart(item) {
+    const itemExist = cart.findIndex(guitar => guitar.id === item.id);
+    if (itemExist >= 0) {
       console.log("Ya existe");
-      const updCart=[...cart];
+      const updCart = [...cart];
       updCart[itemExist].quantyty++;
       setCart(updCart);
-    }else{
-      item.quantyty=1;
-      setCart((prevState)=>[...prevState,item]);
+    } else {
+      item.quantyty = 1;
+      setCart((prevState) => [...prevState, item]);
       console.log("No existe agregando");
     }
-
   }
+  function removeFromCart(id) {
+    setCart(prevState => prevState.filter(cartItem => cartItem.id !== id))
+  }
+  function increaseQuantity(id){
+    const updCart=cart.map((item)=>{
+      if(item.id===id){
+        return {
+          ...item,
+          quantyty:item.quantyty+1
+        }
+      }
+      return item;
+    })
+    setCart(updCart)
+  }
+
+  function cleanCart(){
+    setCart([])
+  }
+
+  function decrementQuantity(id){
+    const updCart=cart.map((item)=>{
+      if(item.id===id && item.quantyty>1){
+        return {
+          ...item,
+          quantyty:item.quantyty-1
+        }
+      }
+      return item;
+    })
+    setCart(updCart)
+  }
+
 
   return (
     <>
-      <Header />
+      <Header
+        removeFromCart={removeFromCart}
+        increaseQuantity={increaseQuantity}
+        decrementQuantity={decrementQuantity}
+        cleanCart={cleanCart}
+
+        cart={cart}
+      />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
@@ -43,7 +82,7 @@ function App() {
             <Guitar
               key={guitarARR.id}
               guitar={guitarARR}
-              addToCart={()=>addToCart(guitarARR)}
+              addToCart={() => addToCart(guitarARR)}
             />
           )}
         </div>
